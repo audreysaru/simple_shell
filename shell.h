@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-void display_prompt(void);
-void read_command(char *command[], int size);
-void execute_command(char *command[]);
+#include <sys/types.h>
+#include <sys/wait.h>
 #endif
