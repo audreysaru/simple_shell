@@ -97,37 +97,38 @@ void assign_lineptr(char **lineptr, size_t *n, char *buffer, size_t b)
  */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 {
-	static ssize_t input = 0;
+	static ssize_t input;
 	ssize_t ret;
-	char c;
-	/**int r;*/
-	char *buffer;
-
-	buffer = malloc(sizeof(char) * 120);
-	if (!buffer)
-		return (-1);
+	char c = 'x', *buffer;
+	int r;
 
 	if (input == 0)
 		fflush(stream);
 	else
 		return (-1);
+	input = 0;
 
-	while ((c = getc(stream)) != '\n')
+	buffer = malloc(sizeof(char) * 120);
+	if (!buffer)
+		return (-1);
+
+	while (c != '\n')
 	{
-		if (c == EOF)
+		r = read(STDIN_FILENO, &c, 1);
+		if (r == -1 || (r == 0 && input == 0))
 		{
 			free(buffer);
 			return (-1);
 		}
+		if (r == 0 && input != 0)
+		{
+			input++;
+			break;
+		}
 
 		if (input >= 120)
-		{
 			buffer = _realloc(buffer, input, input + 1);
-			if (!buffer)
-			{
-				return (-1);
-			}
-		}
+
 		buffer[input] = c;
 		input++;
 	}
@@ -136,6 +137,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 	assign_lineptr(lineptr, n, buffer, input);
 
 	ret = input;
-	input = 0;
+	if (r != 0)
+		input = 0;
 	return (ret);
 }
