@@ -13,6 +13,7 @@
 
 #define END_OF_FILE -2
 #define EXIT -3
+#define READ_SIZE 1024
 
 /* Global environemnt */
 extern char **environ;
@@ -132,4 +133,4 @@ void help_unsetenv(void);
 void help_history(void);
 
 int proc_file_commands(char *file_path, int *exe_ret);
-#endif /* _SHELL_H_ */
+#endif /* SHELL_H */
